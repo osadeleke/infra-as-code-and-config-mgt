@@ -1,0 +1,6 @@
+aws_region     = "us-east-1"
+aws_access_key = "AKIA4SDNVJRBHP67OUPL"
+aws_secret_key = "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"
+ami_id         = "ami-04b4f1a9cf54c11d0"
+instance_type  = "t2.micro"
+ssh_key_name = "hng"

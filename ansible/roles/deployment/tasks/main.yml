@@ -1,0 +1,15 @@
+---
+- name: Clone application repository
+  git:
+    repo: https://github.com/osadeleke/DevOps-Stage-4.git
+    dest: /opt/app
+
+# - name: Copy docker-compose.yml
+#   copy:
+#     src: files/docker-compose.yml
+#     dest: /opt/app/docker-compose.yml
+
+- name: Start Docker Compose
+  command: docker-compose up -d
+  args:
+    chdir: /opt/app

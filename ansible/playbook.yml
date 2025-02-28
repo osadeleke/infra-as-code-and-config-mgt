@@ -1,0 +1,6 @@
+---
+- hosts: app
+  become: yes
+  roles:
+    - dependencies
+    - deployment
