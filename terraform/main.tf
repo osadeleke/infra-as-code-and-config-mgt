@@ -29,13 +29,14 @@ resource "aws_instance" "app_server" {
     }
   }
 
-  # Use local-exec to trigger the Ansible playbook after provisioning
-  provisioner "local-exec" {
-    command = <<EOT
-      cd ../ansible && \
-      ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory playbook.yml
-    EOT
-  }
+  # # Use local-exec to trigger the Ansible playbook after provisioning
+  # provisioner "local-exec" {
+  #   command = <<EOT
+  #     sleep 30 &&
+  #     cd ../ansible && \
+  #     ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory playbook.yml
+  #   EOT
+  # }
 }
 
 resource "aws_security_group" "app_sg" {
@@ -75,4 +76,23 @@ resource "local_file" "ansible_inventory" {
     app_server_ip = aws_instance.app_server.public_ip
   })
   filename = "../ansible/inventory"
+}
+
+resource "null_resource" "run_ansible" {
+  depends_on = [
+    aws_instance.app_server,
+  ]
+
+  # Add triggers to ensure ansible runs when instance or IP changes
+  triggers = {
+    instance_id = aws_instance.app_server.id
+  }
+
+  provisioner "local-exec" {
+    # Add a small delay to ensure instance is fully ready
+    command = <<-EOT
+      sleep 30 && \
+      ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ../ansible/inventory ../ansible/playbook.yml
+    EOT
+  }
 }

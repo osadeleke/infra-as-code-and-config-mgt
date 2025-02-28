@@ -9,7 +9,7 @@
     state: present
 
 - name: Install Docker Compose
-  pip:
+  apt:
     name: docker-compose
     state: present
 
